@@ -1,16 +1,15 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { useContext } from 'react';
+import NavForUserLogged from './NavForUserLogged';
+import NavForUserUnlogged from './NavForUserUnlogged';
+import UserContext from '../context/UserContext';
 
 function Navbar() {
+    const { currentUser } = useContext(UserContext);
+
+    const handleNav =  (currentUser) ? <NavForUserLogged /> : <NavForUserUnlogged />
     return (
         <div>
-            <nav className="navbar navbar-expand-lg navbar-light bg-light">
-                <NavLink className='nav-link' exact to='/'>Jobly</NavLink>     
-                <NavLink className='nav-link' exact to='/companies'>Companies</NavLink>
-                <NavLink className='nav-link' exact to='/jobs'>Jobs</NavLink>
-                <NavLink className='nav-link' exact to='/profile'>Profile</NavLink>
-                <NavLink className ='nav-link' exact to ='/logout'>Logout</NavLink>
-            </nav>
+            {handleNav}
         </div>
     );
 }
