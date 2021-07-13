@@ -9,7 +9,6 @@ function CompanyDetails() {
     
     //load api
     useEffect(() => {
-        console.log('hi lou');
         async function getCompanyDetails() {
             const c = await JoblyApi.getCompany(handle);
             setCompany(c);
