@@ -1,7 +1,7 @@
 import React, {useState, useEffect  } from 'react';
 import Router from './routes/Router';
 import Navbar from './routes/Navbar';
-import { BrowserRouter, useHistory } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import UserContext from './context/UserContext'
 import JoblyApi from './api';
 import {decodeToken } from 'react-jwt';
@@ -14,10 +14,16 @@ function App() {
   useEffect(() => {
     async function getCurrentUser() {
       if (token) {
-        JoblyApi.token = token;
-        const {username} = decodeToken(token);
-        const user = await JoblyApi.getUserDetails(username);
-        setCurrentUser(user);
+        try {
+          JoblyApi.token = token;
+          const {username} = decodeToken(token);
+          const user = await JoblyApi.getUserDetails(username);
+          setCurrentUser(user);  
+        } catch (e) {
+          console.error('Errors found:', e);
+          setCurrentUser(null);
+        }
+        
       }
     }
     getCurrentUser();
@@ -41,12 +47,22 @@ function App() {
     setCurrentUser(null);
   }
 
+  // handles user signup
+  async function registration(newUserInfo) {
+    try {
+      const token = await JoblyApi.register(newUserInfo);
+      setToken(token)
+      return { success: true };
+    } catch (e) {
+      return { success: false, e}
+    }
+  }
 
   return (
     <div className="App">
       <BrowserRouter>
         <UserContext.Provider
-          value={{ currentUser, login, logout }}>
+          value={{ currentUser, login, logout, registration }}>
           <Navbar />
           <Router />
         </UserContext.Provider>
