@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import JobCard from '../jobs/JobCard';
 
 function SearchForm({search}) {
     const [formData, setFormData] = useState({
