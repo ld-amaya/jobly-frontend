@@ -7,21 +7,23 @@ import JoblyApi from './api';
 import {decodeToken } from 'react-jwt';
 
 function App() {
-  const [currentUser, setCurrentUser] = useState(null);
   const [token, setToken] = useState(null);
-
+  const [user, setUser] = useState(null);
+  
   // Get user details if token is triggered
   useEffect(() => {
     async function getCurrentUser() {
       if (token) {
         try {
           JoblyApi.token = token;
-          const {username} = decodeToken(token);
+          //Store to localStorage
+          window.localStorage.setItem('token', token);
+          const { username } = decodeToken(token);
           const user = await JoblyApi.getUserDetails(username);
-          setCurrentUser(user);  
+          setUser(user);
         } catch (e) {
           console.error('Errors found:', e);
-          setCurrentUser(null);
+          setUser(null);
         }
         
       }
@@ -29,11 +31,22 @@ function App() {
     getCurrentUser();
   }, [token]);
 
+  //Check if user is currently logged
+  useEffect(() => {
+    function checkToken() {
+      if (window.localStorage.getItem('token')) {
+        setToken(window.localStorage.getItem('token'))
+      }
+    }
+    checkToken();
+  },[])
+
   // handles user login 
   async function login(credentials) {
     try {
-      const token = await JoblyApi.login(credentials);
-      setToken(token);
+      const tok = await JoblyApi.login(credentials);
+      // Need to await before returning success
+      setToken(tok);
       return {success: true}
     } catch (e) {
       console.error(e);
@@ -42,9 +55,10 @@ function App() {
     
   }
   
-  // Handles user log out
+  // Handles user log out, clean Current user and localStorage
   const logout = ()=>{
-    setCurrentUser(null);
+    setUser(null);
+    localStorage.clear();
   }
 
   // handles user signup
@@ -62,7 +76,7 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <UserContext.Provider
-          value={{ currentUser, login, logout, registration }}>
+          value={{ user, setUser, login, logout, registration }}>
           <Navbar />
           <Router />
         </UserContext.Provider>
