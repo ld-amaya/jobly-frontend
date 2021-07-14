@@ -3,7 +3,7 @@ import React from 'react'
 function Alerts( { messages , type  }) {
     
     const handleMessages = messages.map(message => (
-        <div className='alert alert-danger p-0 mt-1 text-center'>
+        <div className='alert alert-danger p-0 mt-1 px-2 text-center' role='alert'>
             {message}
         </div>
     ))
