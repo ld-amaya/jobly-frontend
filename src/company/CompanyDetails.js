@@ -21,7 +21,7 @@ function CompanyDetails() {
     
     return (
         <div className='container col-md-8 mt-5'>
-            <h4 class="card-title">{company.name}</h4>
+            <h4 className="card-title">{company.name}</h4>
             <div>{company.description}</div>
             <div>Totel Employees: {company.numEmployees}</div>
             <JobList jobs ={company.jobs} />
