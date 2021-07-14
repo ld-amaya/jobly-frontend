@@ -4,9 +4,9 @@ import NavForUserUnlogged from './NavForUserUnlogged';
 import UserContext from '../context/UserContext';
 
 function Navbar() {
-    const { currentUser } = useContext(UserContext);
+    const { user } = useContext(UserContext);
 
-    const handleNav =  (currentUser) ? <NavForUserLogged /> : <NavForUserUnlogged />
+    const handleNav =  (user) ? <NavForUserLogged /> : <NavForUserUnlogged />
     return (
         <div>
             {handleNav}
