@@ -27,7 +27,7 @@ function LoginForm() {
             username: '',
             password: ''
         });
-        if (res.success) {
+        if (res.success) { 
             history.push("/companies");
         } else {
             setErr(res.e);
