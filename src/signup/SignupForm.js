@@ -1,4 +1,7 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
+import UserContext from '../context/UserContext';
+import { useHistory } from 'react-router-dom';
+import Alerts from '../alert/Alerts';
 
 function SignupForm() {
     const [formData, setFormData] = useState({
@@ -8,6 +11,9 @@ function SignupForm() {
         lastName: '',
         email:''
     });
+    const [err, setErr] = useState([]);
+    const { registration } = useContext(UserContext);
+    const history = useHistory();
 
     const handleChange = (e) => {
         const { name, value } = e.target
@@ -17,8 +23,25 @@ function SignupForm() {
         })
     }
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const res = await registration(formData)
+        setFormData({
+            username: '',
+            password: '',
+            firstName: '',
+            lastName: '',
+            email:''
+        })
+        if (res.success) {
+            history.push('/companies');
+        } else {
+            setErr(res.e);
+        }
+    }
+
     return(
-        <form>
+        <form onSubmit={handleSubmit}>
             <div className='form-group'>
                 <label className='col-form-label' htmlFor='username'>Username</label>
                 <input
@@ -74,6 +97,7 @@ function SignupForm() {
                     value={formData.email}
                 />
             </div>
+            { err.length ? <Alerts messages = {err} type = 'danger' /> : null }
             <div style={{textAlign:'end'}}>
                 <button type='submit' className='btn btn-primary btn-sm mt-3'>Submit</button>
             </div>
