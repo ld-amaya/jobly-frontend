@@ -12,7 +12,6 @@ function SearchForm({search}) {
     const handleSubmit = (e) => {
         e.preventDefault();
         search(formData);
-        setFormData({ search: '' });
     }
 
     return (

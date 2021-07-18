@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import JobCard from './JobCard';
 
 function JobList({ jobs }) {
+
     const displayJobs = jobs.map(job => (
         <JobCard
             key={job.id}

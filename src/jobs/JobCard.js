@@ -6,7 +6,6 @@ function JobCard({ title, salary, equity, id }) {
     const [value, putComma] = useAddCommas();
     const [applied, setApplied] = useState(false);
     const { apply, hasApplied } = useContext(UserContext);
-
     // Convert numbers to string with comma 
     useEffect(() => {
         function convertSalary() {
@@ -20,7 +19,7 @@ function JobCard({ title, salary, equity, id }) {
     // Check if user applied to the job
     useEffect(() => {
         function checkApplication() {
-              hasApplied(id) ? setApplied(true) : setApplied(false)    
+            hasApplied(id) ? setApplied(true) : setApplied(false)    
         }
         checkApplication();
     },[id])

@@ -25,15 +25,16 @@ function Router() {
             <UserLoggedRoute exact path='/companies'>
                 <Companies />
             </UserLoggedRoute>
+            <UserLoggedRoute exact path='/profile'>
+                <Profile />
+            </UserLoggedRoute>
             <UserLoggedRoute exact path='/companies/:handle'>
                 <CompanyDetails />
             </UserLoggedRoute>
             <UserLoggedRoute exact path='/jobs'>
                 <Jobs />
             </UserLoggedRoute>
-            <UserLoggedRoute exact path='/profile'>
-                <Profile />
-            </UserLoggedRoute>
+            
         
             
             <Redirect to='/' />

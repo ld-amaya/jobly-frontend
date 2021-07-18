@@ -7,12 +7,13 @@ import JoblyApi from './api';
 import {decodeToken } from 'react-jwt';
 
 function App() {
-  const [token, setToken] = useState(null);
-  const [user, setUser] = useState(null);
+  const tkn = window.localStorage.getItem('token') ? window.localStorage.getItem('token')  : null
+  const [token, setToken] = useState(tkn);
+  const [user, setUser] = useState([]);
   const [jobsApplied, setJobsApplied] = useState(new Set([]));
 
   // Get user details if token is triggered
-  useEffect(() => {
+  useEffect(async () => {
     async function getCurrentUser() {
       if (token) {
         try {
@@ -21,26 +22,18 @@ function App() {
           window.localStorage.setItem('token', token);
           const { username } = decodeToken(token);
           const user = await JoblyApi.getUserDetails(username);
-          setJobsApplied(new Set([user.applications]));
-          setUser(user);
+          await setJobsApplied(new Set(user.applications));
+          setUser({ ...user });
         } catch (e) {
           console.error('Errors found:', e);
           setUser(null);
         }
       }
     }
-    getCurrentUser();
+    await getCurrentUser();
   }, [token]);
 
-  //Check if user is currently logged
-  useEffect(() => {
-    function checkToken() {
-      if (window.localStorage.getItem('token')) {
-        setToken(window.localStorage.getItem('token'))
-      }
-    }
-    checkToken();
-  },[])
+
 
   // handles user login 
   async function login(credentials) {
@@ -74,7 +67,7 @@ function App() {
   }
 
   function hasApplied(id) {
-    return jobsApplied.has(id);
+      return jobsApplied.has(id);
   }
 
   // handles job application
@@ -84,12 +77,12 @@ function App() {
     await JoblyApi.apply(user.username, jobID);
     setJobsApplied(new Set([...jobsApplied, jobID]));
   }
-
+  
   return (
     <div className="App">
       <BrowserRouter>
         <UserContext.Provider
-          value={{ user, setUser, login, logout, registration, apply, hasApplied }}>
+          value={{ user, setUser, login, logout, registration, apply, hasApplied, token, setToken }}>
           <Navbar />
           <Router />
         </UserContext.Provider>

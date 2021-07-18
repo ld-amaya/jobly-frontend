@@ -1,10 +1,14 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import UserContext from '../context/UserContext';
 import Alerts from '../alert/Alerts';
 import JoblyApi from '../api';
 
 function ProfileForm() {
+    
     const { user, setUser } = useContext(UserContext);
+    const [err, setErr] = useState([]);
+    const [isSave, setIsSaved] = useState(false);
+
     const [formData, setFormData] = useState({
         username: user.username,
         password: '',
@@ -12,9 +16,22 @@ function ProfileForm() {
         lastName: user.lastName,
         email: user.email
     });
-    const [err, setErr] = useState([]);
-    const [isSave, setIsSaved] = useState(false);
 
+    // Handles browser refresh, this not ideal but it works
+    useEffect(() => {
+        function loadData() {
+            const data = {
+                username: user.username,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email,
+                password: ''
+            }
+            setFormData({ ...data });
+        }
+        loadData()
+    }, [user])
+    
     const handleChange = (e) => {
         const { name, value } = e.target
         setFormData({
@@ -41,8 +58,8 @@ function ProfileForm() {
         } catch (e) {
             setErr(e);
         }
-        
     }
+
     return (
         <form onSubmit ={handleSubmit}>
             <div className='form-group'>

@@ -5,7 +5,6 @@ import UserContext from '../context/UserContext';
 
 function Navbar() {
     const { user } = useContext(UserContext);
-
     const handleNav =  (user) ? <NavForUserLogged /> : <NavForUserUnlogged />
     return (
         <div>
